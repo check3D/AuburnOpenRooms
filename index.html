@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auburn Open Rooms</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <div class="bg-shape bg-shape-a"></div>
+  <div class="bg-shape bg-shape-b"></div>
+  <main class="app-shell">
+    <aside class="panel panel-left">
+      <header class="panel-header">
+        <p class="eyebrow">AuburnOpenRooms</p>
+        <h1>Buildings</h1>
+        <p class="panel-copy">Pick a building to see what is open now and what is opening soon.</p>
+      </header>
+      <label class="search-wrap" for="building-search">
+        <span>Search buildings</span>
+        <input id="building-search" type="search" placeholder="Type a building name" autocomplete="off" />
+      </label>
+      <ul id="building-list" class="building-list" aria-label="Building list"></ul>
+    </aside>
+
+    <section class="panel panel-right">
+      <header class="panel-header right-header">
+        <div>
+          <p id="selected-building-subtitle" class="eyebrow">Selected Building</p>
+          <h2 id="selected-building">Loading...</h2>
+        </div>
+        <div id="clock" class="clock"></div>
+      </header>
+
+      <section class="time-controls" aria-label="Day and time controls">
+        <div class="mode-toggle" role="group" aria-label="Time mode">
+          <button id="mode-now" type="button" class="mode-button is-active" aria-pressed="true">Now</button>
+          <button id="mode-custom" type="button" class="mode-button" aria-pressed="false">Custom</button>
+        </div>
+        <label class="control-field" for="day-select">
+          <span>Day</span>
+          <select id="day-select" disabled>
+            <option value="M">Monday</option>
+            <option value="T">Tuesday</option>
+            <option value="W">Wednesday</option>
+            <option value="R">Thursday</option>
+            <option value="F">Friday</option>
+            <option value="S">Saturday</option>
+            <option value="U">Sunday</option>
+          </select>
+        </label>
+        <label class="control-field" for="time-select">
+          <span>Time</span>
+          <input id="time-select" type="time" step="300" disabled />
+        </label>
+      </section>
+
+      <div class="meta-row">
+        <span id="open-now-count" class="pill pill-open">0 open now</span>
+        <span id="opening-soon-count" class="pill pill-soon">0 opening soon</span>
+        <span class="pill pill-info">Soon = next 2 hours</span>
+      </div>
+
+      <section class="section-block">
+        <h3>Open now</h3>
+        <ul id="open-now-list" class="room-list"></ul>
+      </section>
+
+      <section class="section-block">
+        <h3>Opening soon</h3>
+        <ul id="opening-soon-list" class="room-list"></ul>
+      </section>
+    </section>
+  </main>
+
+  <template id="room-item-template">
+    <li class="room-item">
+      <button class="room-main" type="button" aria-expanded="false">
+        <div>
+          <p class="room-name"></p>
+          <p class="room-subtext"></p>
+        </div>
+        <div class="room-main-right">
+          <p class="room-time"></p>
+          <p class="room-hint">View day schedule</p>
+        </div>
+      </button>
+      <div class="room-details" hidden></div>
+    </li>
+  </template>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
