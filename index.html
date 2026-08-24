@@ -35,22 +35,14 @@
         <div id="clock" class="clock"></div>
       </header>
 
-      <section class="time-controls" aria-label="Day and time controls">
+      <section class="time-controls" aria-label="Date and time controls">
         <div class="mode-toggle" role="group" aria-label="Time mode">
           <button id="mode-now" type="button" class="mode-button is-active" aria-pressed="true">Now</button>
           <button id="mode-custom" type="button" class="mode-button" aria-pressed="false">Custom</button>
         </div>
-        <label class="control-field" for="day-select">
-          <span>Day</span>
-          <select id="day-select" disabled>
-            <option value="M">Monday</option>
-            <option value="T">Tuesday</option>
-            <option value="W">Wednesday</option>
-            <option value="R">Thursday</option>
-            <option value="F">Friday</option>
-            <option value="S">Saturday</option>
-            <option value="U">Sunday</option>
-          </select>
+        <label class="control-field" for="date-select">
+          <span>Date</span>
+          <input id="date-select" type="date" disabled />
         </label>
         <label class="control-field" for="time-select">
           <span>Time</span>
@@ -85,7 +77,7 @@
         </div>
         <div class="room-main-right">
           <p class="room-time"></p>
-          <p class="room-hint">View day schedule</p>
+          <p class="room-hint">View date schedule</p>
         </div>
       </button>
       <div class="room-details" hidden></div>

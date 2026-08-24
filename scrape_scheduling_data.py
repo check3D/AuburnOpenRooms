@@ -216,7 +216,17 @@ def get_classes_page():
     
     return response.text
     
-CSV_HEADER = ["CRN", "Class Name", "Time Start", "Time End", "Days", "Building", "Room"]
+CSV_HEADER = [
+    "CRN",
+    "Class Name",
+    "Time Start",
+    "Time End",
+    "Days",
+    "Date Start",
+    "Date End",
+    "Building",
+    "Room",
+]
     
 def extract_relevant_rows(response_text, include_non_class_meetings=False):
     rows = [CSV_HEADER]
@@ -259,7 +269,7 @@ def extract_relevant_rows(response_text, include_non_class_meetings=False):
 
         for row in meeting_table.find_all("tr"):
             cells = row.find_all("td")
-            if len(cells) < 4:
+            if len(cells) < 5:
                 continue  # header rows and unexpected rows
 
             cell_text = [td.get_text(" ", strip=True) for td in cells]
@@ -278,8 +288,24 @@ def extract_relevant_rows(response_text, include_non_class_meetings=False):
             days = "" if (not days_text or days_text.upper() == "TBA") else days_text
 
             building, room = parse_location(cell_text[3])
+            date_range = parse_date_range(cell_text[4])
+            if not date_range:
+                continue
+            date_start, date_end = date_range
 
-            rows.append([crn, class_name, start, end, days, building, room])
+            rows.append(
+                [
+                    crn,
+                    class_name,
+                    start,
+                    end,
+                    days,
+                    date_start,
+                    date_end,
+                    building,
+                    room,
+                ]
+            )
 
     return rows
         
@@ -299,6 +325,20 @@ def parse_time(times):
         return None
 
     return start, end
+
+
+def parse_date_range(value):
+    """Return the upstream meeting date range as two display strings."""
+
+    value = value.strip()
+    if not value or value.upper() == "TBA":
+        return None
+
+    parts = re.split(r"\s+-\s+", value, maxsplit=1)
+    if len(parts) != 2 or not all(part.strip() for part in parts):
+        return None
+
+    return parts[0].strip(), parts[1].strip()
     
 def parse_location(where):    
     where = where.strip()

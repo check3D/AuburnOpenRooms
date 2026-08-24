@@ -1,6 +1,6 @@
 import argparse
 import csv
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 import json
 import re
 from collections import defaultdict
@@ -78,6 +78,8 @@ def _is_standard_room(room: str | None) -> bool:
 
 _ROOM_SPLIT_RE = re.compile(r"^(\d+)(.*)$")
 DAY_ORDER = ["M", "T", "W", "R", "F", "S", "U"]
+DAY_CODE_BY_WEEKDAY = dict(enumerate(DAY_ORDER))
+DATE_FORMAT = "%b %d, %Y"
 
 
 def room_sort_key(room: str):
@@ -100,6 +102,12 @@ def format_time(value: datetime) -> str:
     """Convert a datetime back into the dataset's lowercase time format."""
 
     return value.strftime("%I:%M %p").lstrip("0").lower()
+
+
+def parse_date(value: str) -> date:
+    """Convert upstream strings like 'Aug 17, 2026' into a date."""
+
+    return datetime.strptime(value.strip(), DATE_FORMAT).date()
 
 
 def format_ranges(ranges: list[tuple[datetime, datetime]]) -> list[str]:
@@ -206,14 +214,20 @@ def build_default_building_hours(
     building_rooms: dict[str, list[str]],
     default_open_time: str,
     default_close_time: str,
-) -> dict[str, dict[str, str]]:
-    hours: dict[str, dict[str, str]] = {}
+) -> dict[str, dict[str, dict[str, str] | None]]:
+    """Build weekday hours, with Saturday and Sunday closed by default."""
+
+    hours: dict[str, dict[str, dict[str, str] | None]] = {}
     for building in sorted(building_rooms, key=str.upper):
         if building == "OTHER":
             continue
         hours[building] = {
-            "open": default_open_time,
-            "close": default_close_time,
+            day: (
+                {"open": default_open_time, "close": default_close_time}
+                if day in DAY_ORDER[:5]
+                else None
+            )
+            for day in DAY_ORDER
         }
     return hours
 
@@ -223,31 +237,54 @@ def load_building_hours(
     building_rooms: dict[str, list[str]],
     default_open_time: str,
     default_close_time: str,
-) -> dict[str, tuple[str, str]]:
+) -> dict[str, dict[str, tuple[str, str] | None]]:
     default_hours = build_default_building_hours(
         building_rooms,
         default_open_time,
         default_close_time,
     )
 
-    if not path.exists():
-        path.write_text(json.dumps(default_hours, indent=2, sort_keys=True), encoding="utf-8")
-        raw_hours = default_hours
-    else:
-        raw_hours = json.loads(path.read_text(encoding="utf-8"))
+    raw_hours = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
 
-    hours_by_building: dict[str, tuple[str, str]] = {}
+    normalized_hours: dict[str, dict[str, dict[str, str] | None]] = {}
+    hours_by_building: dict[str, dict[str, tuple[str, str] | None]] = {}
     for building in default_hours:
         value = raw_hours.get(building, {})
-        open_time = value.get("open", default_open_time)
-        close_time = value.get("close", default_close_time)
-        hours_by_building[building] = (open_time, close_time)
+
+        # Migrate the original {open, close} format to weekday-only hours.
+        if isinstance(value, dict) and ("open" in value or "close" in value):
+            open_time = value.get("open", default_open_time)
+            close_time = value.get("close", default_close_time)
+            value = {
+                day: ({"open": open_time, "close": close_time} if day in DAY_ORDER[:5] else None)
+                for day in DAY_ORDER
+            }
+
+        normalized_hours[building] = {}
+        hours_by_building[building] = {}
+        for day in DAY_ORDER:
+            day_value = value.get(day, default_hours[building][day]) if isinstance(value, dict) else default_hours[building][day]
+            if day_value is None:
+                normalized_hours[building][day] = None
+                hours_by_building[building][day] = None
+                continue
+
+            open_time = day_value.get("open", default_open_time)
+            close_time = day_value.get("close", default_close_time)
+            if parse_time(close_time) <= parse_time(open_time):
+                raise ValueError(f"Close time must be after open time for {building!r} on {day}")
+            normalized_hours[building][day] = {"open": open_time, "close": close_time}
+            hours_by_building[building][day] = (open_time, close_time)
+
+    # Reconcile the file every run: preserve overrides, add new buildings, and
+    # drop buildings that no longer appear in the current room inventory.
+    path.write_text(json.dumps(normalized_hours, indent=2, sort_keys=True), encoding="utf-8")
 
     return hours_by_building
 
 
 def build_room_occupancy(rows: list[dict]) -> dict[str, dict[str, dict[str, list[str]]]]:
-    """Return building -> room -> day -> occupied time ranges.
+    """Return building -> room -> ISO date -> occupied time ranges.
 
     Each day contains a list of strings like '9:30 am - 12:15 pm'. Back-to-back
     classes are merged when the gap between them is 15 minutes or less.
@@ -260,29 +297,32 @@ def build_room_occupancy(rows: list[dict]) -> dict[str, dict[str, dict[str, list
     for row in rows:
         building = row["Building"].strip()
         room = row["Room"].strip()
-        days = split_days(row.get("Days", ""))
+        days = set(split_days(row.get("Days", "")))
         if not building or not room or not days:
             continue
 
         start = parse_time(row["Time Start"])
         end = parse_time(row["Time End"])
-        for day in days:
-            occupancy_ranges[building][room][day].append((start, end))
+        date_start = parse_date(row["Date Start"])
+        date_end = parse_date(row["Date End"])
+        if date_end < date_start:
+            raise ValueError(f"Meeting ends before it starts for CRN {row.get('CRN', '')}")
+
+        meeting_date = date_start
+        while meeting_date <= date_end:
+            if DAY_CODE_BY_WEEKDAY[meeting_date.weekday()] in days:
+                occupancy_ranges[building][room][meeting_date.isoformat()].append((start, end))
+            meeting_date += timedelta(days=1)
 
     occupancy: dict[str, dict[str, dict[str, list[str]]]] = {}
     for building in sorted(occupancy_ranges, key=str.upper):
         occupancy[building] = {}
         for room in sorted(occupancy_ranges[building], key=room_sort_key):
-            day_map: dict[str, list[str]] = {}
-            for day in DAY_ORDER:
-                ranges = occupancy_ranges[building][room].get(day, [])
-                if not ranges:
-                    continue
+            date_map: dict[str, list[str]] = {}
+            for date_key, ranges in sorted(occupancy_ranges[building][room].items()):
+                date_map[date_key] = format_ranges(merge_time_ranges(ranges))
 
-                merged_ranges = merge_time_ranges(ranges)
-                day_map[day] = format_ranges(merged_ranges)
-
-            occupancy[building][room] = day_map
+            occupancy[building][room] = date_map
 
     return occupancy
 
@@ -291,34 +331,50 @@ def invert_room_occupancy(
     occupancy: dict[str, dict[str, dict[str, list[str]]]],
     default_open_time: str = "8:00 am",
     default_close_time: str = "10:00 pm",
-    building_hours: dict[str, tuple[str, str]] | None = None,
+    building_hours: dict[str, dict[str, tuple[str, str] | None]] | None = None,
+    date_start: date | None = None,
+    date_end: date | None = None,
 ) -> dict[str, dict[str, dict[str, list[str]]]]:
-    """Return building -> room -> day -> open time ranges.
+    """Return building -> room -> ISO date -> open time ranges.
 
     `building_hours` can override the default open/close window per building:
     {
-        "Lowder Hall": ("7:30 am", "9:00 pm"),
+        "Lowder Hall": {"M": ("7:30 am", "9:00 pm"), "S": None},
     }
     """
 
     hours_by_building = building_hours or {}
     availability: dict[str, dict[str, dict[str, list[str]]]] = {}
 
-    for building in sorted(occupancy, key=str.upper):
-        building_open_str, building_close_str = hours_by_building.get(
-            building,
-            (default_open_time, default_close_time),
-        )
-        building_open = parse_time(building_open_str)
-        building_close = parse_time(building_close_str)
-        if building_close <= building_open:
-            raise ValueError(f"Close time must be after open time for {building!r}")
+    if date_start is None or date_end is None:
+        date_keys = [date_key for rooms in occupancy.values() for dates in rooms.values() for date_key in dates]
+        if not date_keys:
+            return {}
+        date_start = date.fromisoformat(min(date_keys))
+        date_end = date.fromisoformat(max(date_keys))
 
+    for building in sorted(occupancy, key=str.upper):
         availability[building] = {}
         for room in sorted(occupancy[building], key=room_sort_key):
             room_availability: dict[str, list[str]] = {}
-            for day in DAY_ORDER:
-                occupied_strings = occupancy[building][room].get(day, [])
+            current_date = date_start
+            while current_date <= date_end:
+                day = DAY_CODE_BY_WEEKDAY[current_date.weekday()]
+                building_schedule = hours_by_building.get(building)
+                hours = (
+                    building_schedule.get(day)
+                    if building_schedule is not None
+                    else ((default_open_time, default_close_time) if day in DAY_ORDER[:5] else None)
+                )
+                current_date_key = current_date.isoformat()
+                current_date += timedelta(days=1)
+                if hours is None:
+                    continue
+
+                building_open_str, building_close_str = hours
+                building_open = parse_time(building_open_str)
+                building_close = parse_time(building_close_str)
+                occupied_strings = occupancy[building][room].get(current_date_key, [])
                 occupied_ranges = [
                     tuple(parse_time(part.strip()) for part in time_range.split(" - ", 1))
                     for time_range in occupied_strings
@@ -338,11 +394,19 @@ def invert_room_occupancy(
                 if cursor < building_close:
                     free_ranges.append((cursor, building_close))
 
-                room_availability[day] = format_ranges(free_ranges)
+                room_availability[current_date_key] = format_ranges(free_ranges)
 
             availability[building][room] = room_availability
 
     return availability
+
+
+def get_term_date_range(rows: list[dict]) -> tuple[date, date]:
+    starts = [parse_date(row["Date Start"]) for row in rows]
+    ends = [parse_date(row["Date End"]) for row in rows]
+    if not starts or not ends:
+        raise ValueError("No dated physical-room meetings were found")
+    return min(starts), max(ends)
 
 
 def read_csv(path: Path) -> tuple[list[str], list[dict]]:
@@ -377,12 +441,12 @@ def main() -> int:
     parser.add_argument(
         "--occupancy-json",
         default="room_occupancy.json",
-        help="Output path for building->room->day occupied time ranges JSON",
+        help="Output path for building->room->date occupied time ranges JSON",
     )
     parser.add_argument(
         "--availability-json",
         default="room_availability.json",
-        help="Output path for building->room->day open time ranges JSON",
+        help="Output path for building->room->date open time ranges JSON",
     )
     parser.add_argument(
         "--building-hours-json",
@@ -403,7 +467,14 @@ def main() -> int:
 
     input_path = Path(args.input)
     fieldnames, rows = read_csv(input_path)
+    required_fields = {"Date Start", "Date End"}
+    missing_fields = sorted(required_fields.difference(fieldnames))
+    if missing_fields:
+        raise ValueError(
+            f"Input CSV is missing {', '.join(missing_fields)}. Run the updated scraper first."
+        )
     cleaned, other_buildings = clean_rows(rows)
+    term_start, term_end = get_term_date_range(cleaned)
 
     cleaned_csv_path = Path(args.clean_csv)
     write_csv(cleaned_csv_path, fieldnames, cleaned)
@@ -429,6 +500,8 @@ def main() -> int:
         default_open_time=args.open_time,
         default_close_time=args.close_time,
         building_hours=building_hours,
+        date_start=term_start,
+        date_end=term_end,
     )
     availability_json_path = Path(args.availability_json)
     availability_json_path.write_text(json.dumps(availability, indent=2, sort_keys=True), encoding="utf-8")
@@ -438,8 +511,9 @@ def main() -> int:
     physical_buildings = max(0, len(rooms) - 1)  # excluding OTHER
     print(f"Wrote {physical_buildings} buildings (+ OTHER={len(other_buildings)}) to {rooms_json_path}")
     print(f"Wrote/updated per-building hours in {building_hours_json_path}")
-    print(f"Wrote room occupancy by day to {occupancy_json_path}")
-    print(f"Wrote room availability by day to {availability_json_path}")
+    print(f"Term meeting range: {term_start.isoformat()} through {term_end.isoformat()}")
+    print(f"Wrote room occupancy by date to {occupancy_json_path}")
+    print(f"Wrote room availability by date to {availability_json_path}")
     return 0
 
 

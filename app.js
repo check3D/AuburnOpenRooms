@@ -14,6 +14,20 @@ const DAY_NAME_BY_CODE = {
   U: "Sunday",
 };
 const DAY_CODES = ["M", "T", "W", "R", "F", "S", "U"];
+const MONTH_NUMBER_BY_NAME = {
+  Jan: 1,
+  Feb: 2,
+  Mar: 3,
+  Apr: 4,
+  May: 5,
+  Jun: 6,
+  Jul: 7,
+  Aug: 8,
+  Sep: 9,
+  Oct: 10,
+  Nov: 11,
+  Dec: 12,
+};
 
 const state = {
   roomsByBuilding: {},
@@ -22,7 +36,7 @@ const state = {
   selectedBuilding: "",
   query: "",
   timeMode: "now",
-  customDayCode: "M",
+  customDate: "",
   customMinute: 8 * 60,
   expandedRoomKey: "",
 };
@@ -173,10 +187,21 @@ function indexScheduleRows(rows) {
     const crn = String(row["CRN"] || "").trim();
     const startText = String(row["Time Start"] || "").trim();
     const endText = String(row["Time End"] || "").trim();
+    const dateStart = parseDisplayDate(String(row["Date Start"] || "").trim());
+    const dateEnd = parseDisplayDate(String(row["Date End"] || "").trim());
     const start = parseClockToMinutes(startText);
     const end = parseClockToMinutes(endText);
 
-    if (!building || !room || !className || start == null || end == null || end <= start) {
+    if (
+      !building ||
+      !room ||
+      !className ||
+      start == null ||
+      end == null ||
+      end <= start ||
+      !dateStart ||
+      !dateEnd
+    ) {
       continue;
     }
 
@@ -189,39 +214,70 @@ function indexScheduleRows(rows) {
       index[building] = {};
     }
     if (!index[building][room]) {
-      index[building][room] = {};
+      index[building][room] = [];
     }
-
-    for (const dayCode of days) {
-      if (!index[building][room][dayCode]) {
-        index[building][room][dayCode] = [];
-      }
-      index[building][room][dayCode].push({
-        crn,
-        className,
-        start,
-        end,
-        startText,
-        endText,
-      });
-    }
+    index[building][room].push({
+      crn,
+      className,
+      start,
+      end,
+      startText,
+      endText,
+      dateStart,
+      dateEnd,
+      days,
+    });
   }
 
   for (const building of Object.keys(index)) {
     for (const room of Object.keys(index[building])) {
-      for (const dayCode of Object.keys(index[building][room])) {
-        index[building][room][dayCode].sort(
-          (a, b) => a.start - b.start || a.end - b.end || a.className.localeCompare(b.className)
-        );
-      }
+      index[building][room].sort(
+        (a, b) => a.start - b.start || a.end - b.end || a.className.localeCompare(b.className)
+      );
     }
   }
 
   return index;
 }
 
-function getRoomSchedule(building, room, dayCode) {
-  return state.scheduleIndex?.[building]?.[room]?.[dayCode] || [];
+function parseDisplayDate(value) {
+  const match = String(value).match(/^([A-Za-z]{3})\s+(\d{1,2}),\s+(\d{4})$/);
+  if (!match) {
+    return "";
+  }
+  const month = MONTH_NUMBER_BY_NAME[match[1]];
+  const day = Number(match[2]);
+  const year = Number(match[3]);
+  if (!month || day < 1 || day > 31) {
+    return "";
+  }
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+function formatDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function parseDateKey(dateKey) {
+  const match = String(dateKey).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) {
+    return null;
+  }
+  const parsed = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]), 12);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function getRoomSchedule(building, room, dateKey, dayCode) {
+  const meetings = state.scheduleIndex?.[building]?.[room] || [];
+  return meetings.filter(
+    (meeting) =>
+      meeting.dateStart <= dateKey &&
+      dateKey <= meeting.dateEnd &&
+      meeting.days.includes(dayCode)
+  );
 }
 
 function getCurrentDayCode(date) {
@@ -233,25 +289,29 @@ function getCurrentMinuteOfDay(date) {
 }
 
 function setCustomFromDate(date) {
-  state.customDayCode = getCurrentDayCode(date);
+  state.customDate = formatDateKey(date);
   state.customMinute = getCurrentMinuteOfDay(date);
 }
 
 function getViewContext() {
   if (state.timeMode === "custom") {
-    const dayCode = DAY_CODES.includes(state.customDayCode) ? state.customDayCode : "M";
+    const selectedDate = parseDateKey(state.customDate) || new Date();
+    const dateKey = formatDateKey(selectedDate);
+    const dayCode = getCurrentDayCode(selectedDate);
     const minuteOfDay = Number.isFinite(state.customMinute) ? state.customMinute : 8 * 60;
     return {
+      dateKey,
       dayCode,
       minuteOfDay,
       isCustom: true,
-      clockLabel: `Preview: ${DAY_NAME_BY_CODE[dayCode]} at ${formatMinutesAsClock(minuteOfDay)}`,
+      clockLabel: `Preview: ${selectedDate.toLocaleDateString([], { month: "short", day: "numeric", year: "numeric" })} at ${formatMinutesAsClock(minuteOfDay)}`,
     };
   }
 
   const now = new Date();
   const dayCode = getCurrentDayCode(now);
   return {
+    dateKey: formatDateKey(now),
     dayCode,
     minuteOfDay: getCurrentMinuteOfDay(now),
     isCustom: false,
@@ -263,7 +323,7 @@ function renderTimeControls() {
   const isCustom = state.timeMode === "custom";
   const modeNow = document.querySelector("#mode-now");
   const modeCustom = document.querySelector("#mode-custom");
-  const daySelect = document.querySelector("#day-select");
+  const dateSelect = document.querySelector("#date-select");
   const timeSelect = document.querySelector("#time-select");
 
   modeNow.classList.toggle("is-active", !isCustom);
@@ -271,19 +331,19 @@ function renderTimeControls() {
   modeNow.setAttribute("aria-pressed", String(!isCustom));
   modeCustom.setAttribute("aria-pressed", String(isCustom));
 
-  daySelect.disabled = !isCustom;
+  dateSelect.disabled = !isCustom;
   timeSelect.disabled = !isCustom;
-  daySelect.value = state.customDayCode;
+  dateSelect.value = state.customDate;
   timeSelect.value = formatMinutesForInput(state.customMinute);
 }
 
-function buildRoomStatus(building, dayCode, nowMinute) {
+function buildRoomStatus(building, dateKey, nowMinute) {
   const buildingData = state.availabilityByBuilding[building] || {};
   const openNow = [];
   const openingSoon = [];
 
   for (const room of Object.keys(buildingData)) {
-    const ranges = buildingData[room]?.[dayCode] || [];
+    const ranges = buildingData[room]?.[dateKey] || [];
     const parsedRanges = ranges.map(parseRange).filter(Boolean);
 
     let currentRange = null;
@@ -333,21 +393,21 @@ function buildRoomStatus(building, dayCode, nowMinute) {
   return { openNow, openingSoon };
 }
 
-function getBuildingOpenCounts(dayCode, nowMinute) {
+function getBuildingOpenCounts(dateKey, nowMinute) {
   const counts = new Map();
   for (const building of Object.keys(state.roomsByBuilding)) {
     if (building === "OTHER") {
       continue;
     }
-    const { openNow } = buildRoomStatus(building, dayCode, nowMinute);
+    const { openNow } = buildRoomStatus(building, dateKey, nowMinute);
     counts.set(building, openNow.length);
   }
   return counts;
 }
 
-function renderBuildingList(dayCode, nowMinute) {
+function renderBuildingList(dateKey, nowMinute) {
   const listEl = document.querySelector("#building-list");
-  const counts = getBuildingOpenCounts(dayCode, nowMinute);
+  const counts = getBuildingOpenCounts(dateKey, nowMinute);
   const query = state.query.trim().toLowerCase();
 
   const buildings = Object.keys(state.roomsByBuilding)
@@ -417,7 +477,7 @@ function renderRoomList(targetEl, rows, buildContent, context) {
     const button = node.querySelector(".room-main");
     const details = node.querySelector(".room-details");
     const hint = node.querySelector(".room-hint");
-    const roomKey = `${context.building}|${context.dayCode}|${row.room}`;
+    const roomKey = `${context.building}|${context.dateKey}|${row.room}`;
     const isExpanded = state.expandedRoomKey === roomKey;
 
     node.querySelector(".room-name").textContent = `Room ${row.room}`;
@@ -427,19 +487,24 @@ function renderRoomList(targetEl, rows, buildContent, context) {
 
     button.classList.toggle("is-expanded", isExpanded);
     button.setAttribute("aria-expanded", String(isExpanded));
-    hint.textContent = isExpanded ? "Hide day schedule" : "View day schedule";
+    hint.textContent = isExpanded ? "Hide date schedule" : "View date schedule";
     button.addEventListener("click", () => {
       state.expandedRoomKey = isExpanded ? "" : roomKey;
       render();
     });
 
     if (isExpanded) {
-      const schedule = getRoomSchedule(context.building, row.room, context.dayCode);
+      const schedule = getRoomSchedule(
+        context.building,
+        row.room,
+        context.dateKey,
+        context.dayCode
+      );
       details.hidden = false;
       if (schedule.length === 0) {
         const empty = document.createElement("p");
         empty.className = "empty-state";
-        empty.textContent = "No scheduled classes for this room on this day.";
+        empty.textContent = "No scheduled classes for this room on this date.";
         details.appendChild(empty);
       } else {
         const list = document.createElement("ul");
@@ -473,7 +538,7 @@ function renderRoomList(targetEl, rows, buildContent, context) {
 function renderRightPanel(dayCode, nowMinute, viewContext) {
   const building = state.selectedBuilding;
   const dayName = DAY_NAME_BY_CODE[dayCode];
-  const { openNow, openingSoon } = buildRoomStatus(building, dayCode, nowMinute);
+  const { openNow, openingSoon } = buildRoomStatus(building, viewContext.dateKey, nowMinute);
 
   document.querySelector("#selected-building").textContent = building || "No building";
   document.querySelector("#selected-building-subtitle").textContent = viewContext.isCustom ? `${dayName} (custom)` : `${dayName}`;
@@ -485,30 +550,44 @@ function renderRightPanel(dayCode, nowMinute, viewContext) {
   renderRoomList(openNowListEl, openNow, (row) => ({
     subtext: `Available for ${formatDuration(row.minutesLeft)} more`,
     time: `Until ${formatMinutesAsClock(row.end)}`,
-  }), { building, dayCode });
+  }), { building, dayCode, dateKey: viewContext.dateKey });
 
   const soonListEl = document.querySelector("#opening-soon-list");
   renderRoomList(soonListEl, openingSoon, (row) => ({
     subtext: `Open for ${formatDuration(row.durationMinutes)}`,
     time: `${formatMinutesAsClock(row.start)} - ${formatMinutesAsClock(row.end)}`,
-  }), { building, dayCode });
+  }), { building, dayCode, dateKey: viewContext.dateKey });
 }
 
 function render() {
   const viewContext = getViewContext();
-  renderBuildingList(viewContext.dayCode, viewContext.minuteOfDay);
+  renderBuildingList(viewContext.dateKey, viewContext.minuteOfDay);
   renderRightPanel(viewContext.dayCode, viewContext.minuteOfDay, viewContext);
   renderTimeControls();
 }
 
 async function loadData() {
+  if (window.location.protocol === "file:") {
+    throw new Error(
+      "This page cannot load its data when opened as a local file. Start a web server from the project folder, then open http://localhost:8000/."
+    );
+  }
+
   const [buildingsResponse, availabilityResponse, scheduleResponse] = await Promise.all([
     fetch(BUILDINGS_PATH),
     fetch(AVAILABILITY_PATH),
     fetch(SCHEDULE_CSV_PATH),
   ]);
-  if (!buildingsResponse.ok || !availabilityResponse.ok) {
-    throw new Error("Unable to load required JSON files.");
+  const failedAssets = [
+    [BUILDINGS_PATH, buildingsResponse],
+    [AVAILABILITY_PATH, availabilityResponse],
+  ]
+    .filter(([, response]) => !response.ok)
+    .map(([path, response]) => `${path} (${response.status})`);
+  if (failedAssets.length > 0) {
+    throw new Error(
+      `Unable to load ${failedAssets.join(", ")}. Make sure the web server was started from the project folder.`
+    );
   }
   state.roomsByBuilding = await buildingsResponse.json();
   state.availabilityByBuilding = await availabilityResponse.json();
@@ -525,7 +604,7 @@ function wireEvents() {
   const search = document.querySelector("#building-search");
   const modeNow = document.querySelector("#mode-now");
   const modeCustom = document.querySelector("#mode-custom");
-  const daySelect = document.querySelector("#day-select");
+  const dateSelect = document.querySelector("#date-select");
   const timeSelect = document.querySelector("#time-select");
 
   search.addEventListener("input", (event) => {
@@ -546,8 +625,8 @@ function wireEvents() {
     render();
   });
 
-  daySelect.addEventListener("change", (event) => {
-    state.customDayCode = event.target.value;
+  dateSelect.addEventListener("change", (event) => {
+    state.customDate = event.target.value;
     state.timeMode = "custom";
     render();
   });
@@ -580,9 +659,13 @@ async function boot() {
     }, 60_000);
   } catch (error) {
     document.querySelector("#selected-building").textContent = "Data load error";
-    document.querySelector("#open-now-list").innerHTML = "";
+    const openNowList = document.querySelector("#open-now-list");
+    openNowList.innerHTML = "";
     document.querySelector("#opening-soon-list").innerHTML = "";
-    document.querySelector("#open-now-list").innerHTML = `<li class=\"empty-state\">${error.message}</li>`;
+    const errorItem = document.createElement("li");
+    errorItem.className = "empty-state";
+    errorItem.textContent = error instanceof Error ? error.message : "Unable to load room data.";
+    openNowList.appendChild(errorItem);
   }
 }
 

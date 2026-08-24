@@ -79,14 +79,14 @@ def select_building(buildings: list[str], requested: str | None) -> str:
 def rooms_available_now(
     availability: dict[str, dict[str, dict[str, list[str]]]],
     building: str,
-    day_code: str,
+    date_key: str,
     current_time: datetime,
 ) -> list[tuple[str, str]]:
     building_data = availability.get(building, {})
     matches: list[tuple[str, str]] = []
 
     for room in sorted(building_data, key=room_sort_key):
-        for time_range in building_data[room].get(day_code, []):
+        for time_range in building_data[room].get(date_key, []):
             start, end = parse_time_range(time_range)
             if start <= current_time < end:
                 matches.append((room, end.strftime("%I:%M %p").lstrip("0").lower()))
@@ -117,6 +117,10 @@ def main() -> int:
         "--time",
         help="Override the current local time for testing, for example '3:30 pm'",
     )
+    parser.add_argument(
+        "--date",
+        help="Override the local date for testing, in YYYY-MM-DD format",
+    )
     args = parser.parse_args()
 
     rooms_by_building = load_json(Path(args.rooms_json))
@@ -126,15 +130,25 @@ def main() -> int:
     selected_building = select_building(buildings, args.building)
 
     now = datetime.now()
-    current_time = parse_clock_time(args.time) if args.time else now
-    day_code = DAY_CODE_BY_WEEKDAY[now.weekday()]
+    current_date = datetime.strptime(args.date, "%Y-%m-%d").date() if args.date else now.date()
+    current_time = (
+        parse_clock_time(args.time)
+        if args.time
+        else parse_clock_time(now.strftime("%I:%M %p"))
+    )
+    day_code = DAY_CODE_BY_WEEKDAY[current_date.weekday()]
     day_name = DAY_NAME_BY_CODE[day_code]
 
-    available_rooms = rooms_available_now(availability, selected_building, day_code, current_time)
+    available_rooms = rooms_available_now(
+        availability, selected_building, current_date.isoformat(), current_time
+    )
 
     print()
     print(f"{selected_building}")
-    print(f"{day_name} at {current_time.strftime('%I:%M %p').lstrip('0').lower()}")
+    print(
+        f"{day_name}, {current_date.strftime('%B %d, %Y').replace(' 0', ' ')} "
+        f"at {current_time.strftime('%I:%M %p').lstrip('0').lower()}"
+    )
 
     if not available_rooms:
         print("No rooms are currently available.")
