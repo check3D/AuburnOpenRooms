@@ -114,7 +114,7 @@ CRN,Class Name,Time Start,Time End,Days,Date Start,Date End,Building,Room
 15838,AERO 7970,8:00 am,9:15 am,TR,"Aug 17, 2026","Dec 11, 2026",Charles E Davis Aerospace Hall,356
 15839,AERO 7970,12:30 pm,1:45 pm,TR,"Aug 17, 2026","Dec 11, 2026",Ramsay Hall,202A
 14255,AIRF 1010,10:00 am,10:50 am,W,"Aug 17, 2026","Dec 11, 2026",Lowder Hall,125A
-14256,AIRF 1010,1:00 pm,1:50 pm,W,"Aug 17, 2026","Dec 11, 2026",Haley Center,2182
+14256,AIRF 1010,1:00 pm,1:50 pm,W,"Aug 17, 2026","Dec 11, 2026",Nichols Hall,146
 14257,AIRF 1011,6:00 am,8:50 am,W,"Aug 17, 2026","Dec 11, 2026",,
 14258,AIRF 2010,11:00 am,11:50 am,W,"Aug 17, 2026","Dec 11, 2026",Nichols Hall,146
 14259,AIRF 2010,11:00 am,11:50 am,R,"Aug 17, 2026","Dec 11, 2026",Nichols Hall,146
@@ -172,7 +172,7 @@ CRN,Class Name,Time Start,Time End,Days,Date Start,Date End,Building,Room
 10132,ANSC 3150,11:00 am,12:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",Upchurch Hall,203
 10134,ANSC 3310,9:00 am,9:50 am,W,"Aug 17, 2026","Dec 11, 2026",Upchurch Hall,220
 10134,ANSC 3310,1:00 pm,4:00 pm,F,"Aug 17, 2026","Dec 11, 2026",Lambert Meat Lab,120
-10136,ANSC 3400,10:00 am,10:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",,
+10136,ANSC 3400,10:00 am,10:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Upchurch Hall,203
 10136,ANSC 3400,3:00 pm,4:50 pm,M,"Aug 17, 2026","Dec 11, 2026",Upchurch Hall,220
 10137,ANSC 3500,8:00 am,8:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Upchurch Hall,203
 10138,ANSC 3600,9:00 am,9:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Upchurch Hall,203
@@ -285,6 +285,7 @@ Writing Enriched,18132,9:30 am,10:45 am,TR,"Aug 17, 2026","Dec 11, 2026",Biggin 
 15933,ARTS 4840,1:00 pm,2:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Three-Dimensional Arts Bldg,110
 15934,ARTS 4850,5:00 pm,6:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",Biggin Hall,008
 15935,ARTS 4860,5:00 pm,5:50 pm,W,"Aug 17, 2026","Dec 11, 2026",Biggin Hall,008
+Printmaking,18991,1:00 pm,2:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",,
 15936,ARTS 4980,11:00 am,1:45 pm,TR,"Aug 17, 2026","Dec 11, 2026",Biggin Hall,228
 15937,ARTS 4980,2:00 pm,4:45 pm,TR,"Aug 17, 2026","Dec 11, 2026",Biggin Hall,201
 15938,ARTS 4980,2:00 pm,4:45 pm,TR,"Aug 17, 2026","Dec 11, 2026",Biggin Hall,306
@@ -743,7 +744,7 @@ Study Abroad or Study Away,17728,5:00 pm,6:15 pm,T,"Aug 17, 2026","Dec 11, 2026"
 18173,CHEN 1007,2:00 pm,3:15 pm,T,"Aug 17, 2026","Dec 11, 2026",Ross Hall,309
 11554,CHEN 2100,1:00 pm,1:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Foy Hall,258
 11555,CHEN 2100,1:00 pm,1:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Foy Hall,258
-11555,CHEN 2100,11:00 am,12:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",Shelby Center,1113
+11555,CHEN 2100,11:00 am,12:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",Charles E Davis Aerospace Hall,257
 11556,CHEN 2100,1:00 pm,1:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Foy Hall,258
 11556,CHEN 2100,11:00 am,12:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",Charles E Davis Aerospace Hall,358
 11557,CHEN 2110,11:00 am,12:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",Charles E Davis Aerospace Hall,254
@@ -1285,7 +1286,7 @@ Counselor Education,10257,5:00 pm,7:30 pm,W,"Aug 17, 2026","Dec 11, 2026",,
 11525,CSES 6590,8:00 am,9:15 am,TR,"Aug 17, 2026","Dec 11, 2026",Draughon Library,3035
 11525,CSES 6590,1:00 pm,3:00 pm,R,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,1110
 11527,CSES 6800,10:00 am,11:15 am,MW,"Aug 17, 2026","Dec 11, 2026",Upchurch Hall,218
-11536,CSES 7950,3:00 pm,3:50 pm,M,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,1133
+11536,CSES 7950,3:00 pm,3:50 pm,M,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,1117
 11538,CSES 7970,3:00 pm,3:50 pm,MW,"Aug 17, 2026","Dec 11, 2026",Rouse Life Sciences Bldg,112
 11538,CSES 7970,4:00 pm,6:00 pm,W,"Aug 17, 2026","Dec 11, 2026",Rouse Life Sciences Bldg,112
 17763,CSES 7970,9:30 am,10:45 am,TR,"Aug 17, 2026","Dec 11, 2026",Upchurch Hall,218
@@ -1353,13 +1354,14 @@ Meal Prep Grocery Shopping,10280,9:30 am,10:45 am,TR,"Aug 17, 2026","Dec 11, 202
 14500,ECON 7210,12:30 pm,1:45 pm,TR,"Aug 17, 2026","Dec 11, 2026",Haley Center,3187
 14501,ECON 7310,3:30 pm,4:45 pm,TR,"Aug 17, 2026","Dec 11, 2026",Miller Hall,223
 14502,ECON 7330,9:30 am,10:45 am,TR,"Aug 17, 2026","Dec 11, 2026",Miller Hall,230
-14503,ECON 7340,3:30 pm,4:45 pm,TR,"Aug 17, 2026","Dec 11, 2026",Lowder Hall,127
+14503,ECON 7340,3:30 pm,4:45 pm,TR,"Aug 17, 2026","Dec 11, 2026",Miller Hall,230
 14504,ECON 8210,11:00 am,12:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",,
 14510,ECON 8990,3:00 pm,4:45 pm,F,"Aug 17, 2026","Dec 11, 2026",Miller Hall,230
 10539,ERMA 2400,9:30 am,10:45 am,TR,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,2111
 10541,ERMA 2400,2:00 pm,3:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,2111
 10540,ERMA 2400,11:00 am,11:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,2242
 10542,ERMA 7200,5:00 pm,7:50 pm,R,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,1424
+10543,ERMA 7200,5:00 pm,7:50 pm,T,"Aug 17, 2026","Dec 11, 2026",,
 10544,ERMA 7200,12:00 pm,2:50 pm,M,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,1123
 10545,ERMA 7200,4:00 pm,6:50 pm,M,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,1123
 10548,ERMA 7200,5:00 pm,7:50 pm,T,"Aug 17, 2026","Dec 11, 2026",,
@@ -1771,7 +1773,7 @@ Meal Prep Grocery Shopping,10280,9:30 am,10:45 am,TR,"Aug 17, 2026","Dec 11, 202
 16655,ENGL 2230,8:00 am,9:15 am,TR,"Aug 17, 2026","Dec 11, 2026",Mell Street Classroom Bldg,3546
 16657,ENGL 2230,9:30 am,10:45 am,TR,"Aug 17, 2026","Dec 11, 2026",Mell Street Classroom Bldg,3546
 16659,ENGL 2230,2:00 pm,3:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",Mell Street Classroom Bldg,3520
-16658,ENGL 2230,8:00 am,8:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3174
+16658,ENGL 2230,8:00 am,8:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3034
 16656,ENGL 2230,9:00 am,9:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3238
 16671,ENGL 2230,11:00 am,12:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",Draughon Library,4133
 16672,ENGL 2240,8:00 am,9:15 am,TR,"Aug 17, 2026","Dec 11, 2026",Haley Center,3332
@@ -1862,7 +1864,7 @@ Meal Prep Grocery Shopping,10280,9:30 am,10:45 am,TR,"Aug 17, 2026","Dec 11, 202
 16755,ENGL 4020,9:00 am,10:15 am,MW,"Aug 17, 2026","Dec 11, 2026",Haley Center,3116
 16756,ENGL 4030,10:30 am,11:45 am,MW,"Aug 17, 2026","Dec 11, 2026",Haley Center,3116
 16757,ENGL 4040,12:30 pm,1:45 pm,TR,"Aug 17, 2026","Dec 11, 2026",Haley Center,3226
-18204,ENGL 4230,12:00 pm,1:15 pm,MW,"Aug 17, 2026","Dec 11, 2026",Haley Center,3187
+18204,ENGL 4230,12:00 pm,1:15 pm,MW,"Aug 17, 2026","Dec 11, 2026",Haley Center,3220
 16759,ENGL 4250,1:30 pm,2:45 pm,MW,"Aug 17, 2026","Dec 11, 2026",Haley Center,3110
 16762,ENGL 4420,12:00 pm,1:15 pm,MW,"Aug 17, 2026","Dec 11, 2026",Draughon Library,4127
 18177,ENGL 4430,12:30 pm,1:45 pm,TR,"Aug 17, 2026","Dec 11, 2026",Haley Center,3184
@@ -2074,10 +2076,10 @@ Grimms until Today,12285,1:00 pm,1:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Haley
 12296,FLIT 1020,12:00 pm,12:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3204
 12297,FLIT 1020,11:00 am,11:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3204
 12298,FLIT 2010,11:00 am,11:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3326
-12300,FLIT 3050,2:00 pm,2:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Mell Street Classroom Bldg,3520
+12300,FLIT 3050,2:00 pm,2:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Mell Street Classroom Bldg,4550
 12301,FLIT 3510,12:00 pm,12:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3224
 12302,FLJP 1010,9:00 am,9:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3324
-12303,FLJP 1010,12:00 pm,12:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3218
+12303,FLJP 1010,12:00 pm,12:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3324
 12305,FLJP 2010,10:00 am,10:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3304
 12307,FLJP 3020,3:00 pm,3:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3150
 12310,FLKN 1010,10:00 am,10:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,3204
@@ -2196,10 +2198,10 @@ Grimms until Today,12285,1:00 pm,1:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Haley
 11153,GEOG 2000,4:00 pm,4:50 pm,M,"Aug 17, 2026","Dec 11, 2026",Academic Classroom/Lab Complex,226A
 11154,GEOG 2010,10:00 am,10:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Academic Classroom/Lab Complex,270
 11157,GEOG 4740,9:00 am,9:50 am,MW,"Aug 17, 2026","Dec 11, 2026",Academic Classroom/Lab Complex,226A
-11158,GEOG 5550,11:00 am,11:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,2174
+11158,GEOG 5550,11:00 am,11:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,2257
 11159,GEOG 5700,1:00 pm,2:50 pm,MW,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,2117
 11162,GEOG 5890,9:00 am,10:50 am,MW,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,2117
-11163,GEOG 6550,11:00 am,11:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Haley Center,2174
+11163,GEOG 6550,11:00 am,11:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,2257
 11164,GEOG 6700,1:00 pm,2:50 pm,MW,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,2117
 11167,GEOG 6890,9:00 am,10:50 am,MW,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,2117
 11168,GEOG 7000,3:00 pm,5:50 pm,M,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,2125
@@ -2208,7 +2210,7 @@ Grimms until Today,12285,1:00 pm,1:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Haley
 11206,GEOL 1100,9:30 am,10:45 am,TR,"Aug 17, 2026","Dec 11, 2026",Science Center Auditorium,101
 11206,GEOL 1100,1:00 pm,2:50 pm,R,"Aug 17, 2026","Dec 11, 2026",Academic Classroom/Lab Complex,226B
 11223,GEOL 2000,4:00 pm,4:50 pm,M,"Aug 17, 2026","Dec 11, 2026",Academic Classroom/Lab Complex,226A
-18890,GEOL 3150,2:00 pm,3:50 pm,F,"Aug 17, 2026","Dec 11, 2026",,
+18890,GEOL 3150,2:00 pm,3:50 pm,F,"Aug 17, 2026","Dec 11, 2026",Haley Center,2174
 11229,GEOL 4200,12:00 pm,12:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Academic Classroom/Lab Complex,278A
 11229,GEOL 4200,8:00 am,9:50 am,F,"Aug 17, 2026","Dec 11, 2026",Academic Classroom/Lab Complex,278A
 11231,GEOL 4740,9:00 am,9:50 am,MW,"Aug 17, 2026","Dec 11, 2026",Academic Classroom/Lab Complex,226A
@@ -3143,7 +3145,7 @@ Strategic Design and Technical Production,17353,8:00 am,9:50 am,TR,"Aug 17, 2026
 13016,MATH 7400,9:30 am,10:45 am,TR,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,2125
 13018,MATH 7500,10:00 am,10:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Academic Classroom/Lab Complex,170A
 13020,MATH 7700,12:30 pm,1:45 pm,TR,"Aug 17, 2026","Dec 11, 2026",Science Center Classroom Bldg,122
-13021,MATH 7800,2:00 pm,3:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",Haley Center,2454
+13021,MATH 7800,2:00 pm,3:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,2125
 13022,MATH 7820,11:00 am,12:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,2122
 13023,MATH 7950,3:00 pm,3:50 pm,W,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,2122
 13024,MATH 7950,3:00 pm,4:50 pm,M,"Aug 17, 2026","Dec 11, 2026",STEM and Agric Science Complex,2122
@@ -3803,7 +3805,7 @@ Pediatrics,18259,12:00 pm,2:00 pm,F,"Aug 17, 2026","Dec 11, 2026",,
 12078,POLI 6360,6:30 pm,9:00 pm,W,"Aug 17, 2026","Dec 11, 2026",Haley Center,2346
 12081,POLI 7140,3:30 pm,6:00 pm,R,"Aug 17, 2026","Dec 11, 2026",Haley Center,3104
 18349,POLI 7350,3:30 pm,6:00 pm,M,"Aug 17, 2026","Dec 11, 2026",Haley Center,3204
-17985,POLI 8010,6:30 pm,9:00 pm,W,"Aug 17, 2026","Dec 11, 2026",Haley Center,3224
+17985,POLI 8010,6:30 pm,9:00 pm,W,"Aug 17, 2026","Dec 11, 2026",Haley Center,3242
 12090,POLI 8210,3:30 pm,4:20 pm,T,"Aug 17, 2026","Dec 11, 2026",Haley Center,2226
 12091,POLI 8220,4:30 pm,6:20 pm,T,"Aug 17, 2026","Dec 11, 2026",Haley Center,2226
 12093,POLI 8970,6:30 pm,9:00 pm,T,"Aug 17, 2026","Dec 11, 2026",Haley Center,2222
@@ -3999,12 +4001,13 @@ Special Education,10353,5:00 pm,7:50 pm,M,"Aug 17, 2026","Dec 11, 2026",College 
 18854,CTSE 4061,2:00 pm,3:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,2257
 18705,CTSE 4070,5:00 pm,7:00 pm,W,"Aug 17, 2026","Dec 11, 2026",,
 18705,CTSE 4070,9:00 am,10:50 am,R,"Aug 17, 2026","Dec 11, 2026",,
+18708,CTSE 4071,7:00 am,7:50 am,,"Aug 17, 2026","Dec 11, 2026",,
 16384,CTSE 4160,8:00 am,10:50 am,MW,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,2203
 18466,CTSE 4161,8:00 am,10:50 am,F,"Aug 17, 2026","Dec 11, 2026",,
 16385,CTSE 4910,11:00 am,12:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,2203
 16392,CTSE 5000,6:00 pm,7:50 pm,T,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,2114
 16394,CTSE 5020,5:00 pm,7:50 pm,W,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,1103
-16395,CTSE 5030,8:00 am,10:50 am,TR,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,2141
+16395,CTSE 5030,8:00 am,10:50 am,TR,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,2203
 16397,CTSE 5040,8:00 am,9:50 am,MW,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,1103
 16397,CTSE 5040,8:00 am,8:50 am,F,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,1103
 16399,CTSE 5050,5:00 pm,8:00 pm,M,"Aug 17, 2026","Dec 11, 2026",College of Education Bldg,1424
@@ -4046,7 +4049,7 @@ Special Education,10353,5:00 pm,7:50 pm,M,"Aug 17, 2026","Dec 11, 2026",College 
 12702,SOWO 7000,1:00 pm,3:30 pm,M,"Aug 17, 2026","Dec 11, 2026",Draughon Library,3127
 12703,SOWO 7010,4:00 pm,6:30 pm,T,"Aug 17, 2026","Dec 11, 2026",Draughon Library,4027
 12705,SOWO 7020,4:00 pm,6:30 pm,M,"Aug 17, 2026","Dec 11, 2026",Draughon Library,3133
-12709,SOWO 7060,4:00 pm,6:30 pm,W,"Aug 17, 2026","Dec 11, 2026",Haley Center,3307
+12709,SOWO 7060,4:00 pm,6:30 pm,W,"Aug 17, 2026","Dec 11, 2026",Haley Center,3328
 12711,SOWO 7090,1:00 pm,3:30 pm,W,"Aug 17, 2026","Dec 11, 2026",Draughon Library,3127
 12712,SOWO 7110,4:00 pm,6:30 pm,R,"Aug 17, 2026","Dec 11, 2026",Haley Center,3106
 12713,SOWO 7130,4:00 pm,6:30 pm,W,"Aug 17, 2026","Dec 11, 2026",Mell Street Classroom Bldg,3546
@@ -4250,7 +4253,6 @@ Body,13662,11:00 am,12:15 pm,TR,"Aug 17, 2026","Dec 11, 2026",Telfair Peet Univ 
 Ballet,13678,8:00 am,9:15 am,MWF,"Aug 17, 2026","Dec 11, 2026",Telfair Peet Univ Theatre,170
 Jazz,13679,8:00 am,9:15 am,TR,"Aug 17, 2026","Dec 11, 2026",Telfair Peet Univ Theatre,170
 13681,THEA 4840,10:00 am,11:50 am,TR,"Aug 17, 2026","Dec 11, 2026",Telfair Peet Univ Theatre,170
-13682,THEA 4930,11:00 am,11:50 am,MW,"Aug 17, 2026","Dec 11, 2026",,
 13683,THEA 4930,3:00 pm,4:50 pm,MW,"Aug 17, 2026","Dec 11, 2026",,
 13687,THEA 4980,1:00 pm,3:50 pm,F,"Aug 17, 2026","Dec 11, 2026",Telfair Peet Univ Theatre,128
 16938,UNIV 1050,9:30 am,10:20 am,T,"Aug 17, 2026","Dec 11, 2026",Teague Hall,003
@@ -4379,7 +4381,7 @@ US National Parks LC,18024,11:00 am,11:50 am,TR,"Aug 17, 2026","Dec 11, 2026",Ta
 12232,WILD 5280,1:00 pm,1:50 pm,MW,"Aug 17, 2026","Dec 11, 2026",Forestry & Wildlife Sci Bldg,2217
 12234,WILD 5880,12:00 pm,12:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Forestry & Wildlife Sci Bldg,1221
 12234,WILD 5880,1:00 pm,3:50 pm,F,"Aug 17, 2026","Dec 11, 2026",Forestry & Wildlife Sci Bldg,1221
-18494,WILD 5950,6:00 pm,7:15 pm,W,"Aug 17, 2026","Dec 11, 2026",,
+18494,WILD 5950,6:00 pm,7:15 pm,W,"Aug 17, 2026","Dec 11, 2026",Draughon Library,4027
 12235,WILD 6200,11:00 am,11:50 am,MWF,"Aug 17, 2026","Dec 11, 2026",Forestry & Wildlife Sci Bldg,1219
 12236,WILD 6280,1:00 pm,1:50 pm,MW,"Aug 17, 2026","Dec 11, 2026",Forestry & Wildlife Sci Bldg,2217
 12238,WILD 6880,12:00 pm,12:50 pm,MWF,"Aug 17, 2026","Dec 11, 2026",Forestry & Wildlife Sci Bldg,1221
